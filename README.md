@@ -6,5 +6,5 @@ Run yap_api.py to call YAP GO baesd server, and:
 2. Add tokenizer (Credit: Prof' Yoav Goldberg).
 3. Turn output CONLLU format to Dataframe & JSON.
 
-This code is fully free (no guarantees!). 
+This code is fully free under https://www.apache.org/licenses/LICENSE-2.0 (no guarantees!). 
 
