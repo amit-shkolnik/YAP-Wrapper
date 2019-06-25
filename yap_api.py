@@ -23,7 +23,7 @@ import sys
 import traceback
 import csv
 import re, string
-from heb_enums import *
+from enums import *
 from hebtokenizer import HebTokenizer
 
 class YapApi(object):

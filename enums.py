@@ -1,6 +1,4 @@
 from enum import Enum 
-#import typing
-
 
 class PennTags(Enum):
     CC   =1                        #Coordinating conjunction 

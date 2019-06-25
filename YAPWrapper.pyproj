@@ -24,7 +24,7 @@
   <ItemGroup>
     <Compile Include="hebtokenizer.py" />
     <Compile Include="yap_api.py" />
-    <Compile Include="heb_enums.py" />
+    <Compile Include="enums.py" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="Global|VisualStudio|python36_64" />
