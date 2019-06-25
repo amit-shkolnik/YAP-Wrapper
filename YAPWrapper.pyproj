@@ -4,13 +4,14 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>5e5df865-75ac-4056-945d-4f0b6cda8336</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>YAPWrapper.py</StartupFile>
+    <StartupFile>yap_api.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>YAPWrapper</Name>
     <RootNamespace>YAPWrapper</RootNamespace>
+    <InterpreterId>Global|VisualStudio|python36_64</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,7 +22,12 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="YAPWrapper.py" />
+    <Compile Include="hebtokenizer.py" />
+    <Compile Include="yap_api.py" />
+    <Compile Include="heb_enums.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="Global|VisualStudio|python36_64" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
