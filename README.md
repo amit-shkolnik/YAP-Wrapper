@@ -22,10 +22,13 @@ Then output is:
 * segmented_text - "בתוך עיניה ה כחולות"
 * lemmas - "בתוך עין ה כחול"
 * dep_tree - 
+
 ![alt text](https://github.com/amit-shkolnik/YAP-Wrapper/blob/master/dep_tree.png)
 * md_lattice -
+
 ![alt text](https://github.com/amit-shkolnik/YAP-Wrapper/blob/master/md_lattice.png)
 * ma_lattice - 
+
 ![alt text](https://github.com/amit-shkolnik/YAP-Wrapper/blob/master/md_lattice.png)
 
 
