@@ -332,7 +332,7 @@ if __name__ == '__main__':
     אמנם אין אהבה שאין לה סוף אבל הסוף הזה נראה לי מקולל הולך בין האנשים ברחוב צועק או או או או או או \
     תגידו לה."   
     # IP of YAP server, if locally installed then '127.0.0.1'
-    ip='148.251.69.99:8000'
+    ip='127.0.0.1:8000'
     yap=YapApi()    
     tokenized_text, segmented_text, lemmas, dep_tree, md_lattice, ma_lattice=yap.run(text, ip)             
     print(lemmas)
