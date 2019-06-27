@@ -29,7 +29,7 @@ Then output is:
 ![alt text](https://github.com/amit-shkolnik/YAP-Wrapper/blob/master/md_lattice.png)
 * ma_lattice - 
 
-![alt text](https://github.com/amit-shkolnik/YAP-Wrapper/blob/master/md_lattice.png)
+![alt text](https://github.com/amit-shkolnik/YAP-Wrapper/blob/master/ma_lattice.png)
 
 
 This code is fully free under Apaceh 2.0 (https://www.apache.org/licenses/LICENSE-2.0) (no guarantees!). 
