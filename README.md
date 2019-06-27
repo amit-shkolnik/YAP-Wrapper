@@ -9,11 +9,11 @@ How to use:
   	3.1 If YAP is not installed locally, set the IP address on yap_api.py main method.
 4. The code return 6 elements:
 tokenized_text- string. The text tokenized.
-  segmented_text - string. The text segmented.
-  lemmas - string. The lemmas of the text.
-  dep_tree - DataFrame. Dependency tree.
-  md_lattice - DataFrame. Morphological analysis, as decided by YAP.
-  ma_lattice - DataFrame. Morphological analysis inlcuding all possible lattices.
+segmented_text - string. The text segmented.
+lemmas - string. The lemmas of the text.
+dep_tree - DataFrame. Dependency tree.
+md_lattice - DataFrame. Morphological analysis, as decided by YAP.
+ma_lattice - DataFrame. Morphological analysis inlcuding all possible lattices.
 
 This code is fully free under Apaceh 2.0 (https://www.apache.org/licenses/LICENSE-2.0) (no guarantees!). 
 
