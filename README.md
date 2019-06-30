@@ -1,9 +1,14 @@
 # YAP-Wrapper
 Python interface to Open University YAP (Yet another parser) https://github.com/OnlpLab/yap.
 
+Credit:
+========
+
+https://aclweb.org/anthology/papers/Q/Q19/Q19-1003.bib
+
 How to use:
 ========
-1. Install YAP (instruction are on YAP page....)
+1. Install YAP (instruction are on YAP page.... https://github.com/OnlpLab/yap)
 2. After installing YAP, run it as HTTP server, by simply run "./yap api" from command line. Now Yap is running as HTTP serve on port 8000.
 3. Run the Python code in yap_api.py file ==> main method.
 The python code is calling YAP server via HTTP request...
