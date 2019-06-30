@@ -1,9 +1,7 @@
 # YAP-Wrapper
 Python interface to Open University YAP (Yet another parser) https://github.com/OnlpLab/yap.
 
-Credit:
-========
-
+Yap is a free tool, If you make use of this software for research, we would appreciate the following citation: 
 https://aclweb.org/anthology/papers/Q/Q19/Q19-1003.bib
 
 How to use:
