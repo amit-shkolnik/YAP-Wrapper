@@ -4,6 +4,8 @@ Python interface to Open University YAP (Yet another parser) https://github.com/
 Yap is a free tool, If you make use of YAP for research, we would appreciate the following citation: 
 https://aclweb.org/anthology/papers/Q/Q19/Q19-1003.bib
 
+Alternatively you may use the SaaS server (free use), https://www.langndata.com/heb_parser/overview that case you need only one line of code: https://www.langndata.com/api/heb_parser?token=[YOUR TOKEN]&data=גנן גידל דגן בגן
+
 How to use:
 ========
 1. Install YAP (instruction are on YAP page.... https://github.com/OnlpLab/yap)
