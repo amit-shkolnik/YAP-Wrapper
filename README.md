@@ -6,15 +6,22 @@ https://aclweb.org/anthology/papers/Q/Q19/Q19-1003.bib
 
 Alternatively you may use the SaaS server (free use), https://www.langndata.com/heb_parser/overview that case you need only one line of code: https://www.langndata.com/api/heb_parser?token=[YOUR TOKEN HERE]&data="גנן גידל דגן בגן"
 
-How to use:
-========
+## Installing
 1. Install YAP (instruction are on YAP page.... https://github.com/OnlpLab/yap)
 2. After installing YAP, run it as HTTP server, by simply run "./yap api" from command line. Now Yap is running as HTTP serve on port 8000.
-3. Run the Python code in yap_api.py file ==> main method.
-The python code is calling YAP server via HTTP request...
+3. Install this project via a git dependency - if using pip(preferably within a virtualenv), do 
+   `pip install git+https://github.com/amit-shkolnik/YAP-Wrapper.git`
 
-  	3.1 If YAP is not installed locally, set the IP address on yap_api.py main method.
-4. The code return 6 elements:
+   Alternatively, clone this repository and then do `pip install .` within the repository's folder.
+
+## Running the examples
+
+Clone this repository and make sure the package is installed within your Python environment. You should now be
+able to run `python3 examples/yap_api.py` or `python3 examples/heb_tokenizer.py`
+
+If YAP is not installed locally, set the IP address on `examples/yap_api.py` main method.
+ 
+The code return 6 elements:
 * tokenized_text- string. The text tokenized.
 * segmented_text - string. The text segmented.
 * lemmas - string. The lemmas of the text.
