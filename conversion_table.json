@@ -1,0 +1,50 @@
+{
+  "pronouns": {
+    "suf_gen=F,M|suf_num=P|suf_per=1": "_אנחנו",
+    "suf_gen=F,M|suf_num=S|suf_per=1": "_אני",
+    "suf_gen=M|suf_num=S|suf_per=2": "_אתה",
+    "suf_gen=F|suf_num=S|suf_per=2": "_את",
+    "suf_gen=M|suf_num=P|suf_per=2": "_אתם",
+    "suf_gen=F|suf_num=P|suf_per=2": "_אתן",
+    "suf_gen=F|suf_num=P|suf_per=3": "_הן",
+    "suf_gen=F|suf_num=S|suf_per=3": "_היא",
+    "suf_gen=M|suf_num=P|suf_per=3": "_הם",
+    "suf_gen=M|suf_num=S|suf_per=3": "_הוא"
+  },
+  "entire_line_pos_conversion": {
+    "AT": {"pos": "ADP", "feats": {"old": "_", "new": "Case=Acc|xx_UD_REL=case:acc"}},
+    "BN": {"pos": "VERB", "feats": {"old": "feats+", "new": "|VerbForm=Part"}},
+    "BNT": {"pos": "VERB", "feats": {"old": "+feats+", "new": ["Definite=Cons|", "|VerbForm=Part"]}},
+    "CD": {"pos": "NUM", "feats": "feats"},
+    "CDT": {"pos": "NUM", "feats": {"old": "+feats", "new": "Definite=Cons|"}},
+    "NNT": {"pos": "NOUN", "feats": {"old": "+feats", "new": "Definite=Cons|"}},
+    "COP": {"pos": "AUX", "feats": {"old": "feats+", "new": "|VerbType=Cop|VerbForm=Part"}},
+    "DEF": {"pos": "DET", "feats": {"old": "_", "new": "PronType=Art"}, "concat": "after"},
+    "EX": {"pos": "VERB", "feats": {"old": "_", "new": "HebExistential=True"}},
+    "P": {"pos": "ADV", "feats": {"old": "_", "new": "Prefix=True|xx_UD_REL=compound:affix"}},
+    "DUMMY_AT": {"pos": "ADP", "feats": {"old": "_", "new": "Case=Acc|xx_UD_REL=case:acc"}},
+    "JJT": {"pos": "ADJ", "feats": {"old": "+feats", "new": "Definite=Cons|"}},
+    "MD": {"pos": "AUX", "feats": {"old": "feats+", "new": "|VerbType=Mod"}},
+    "QW": {"pos": "ADV", "feats": {"old": "_", "new": "PronType=Int"}},
+    "TEMP": {"pos": "SCONJ", "feats": {"old": "_", "new": "Case=Tem|xx_UD_REL=mark"}},
+    "DTT": {"pos": "DET", "feats": {"old": "_", "new": "Definite=Cons"}},
+    "S_ANP": {"pos": "PRON", "feats": {"old": "+feats+", "new": ["Case=Acc|", "|PronType=Prs"]}},
+    "S_PRP": {"pos": "PRON", "feats": {"old": "feats+", "new": "|PronType=Prs|Reflex=Yes"}}
+  },
+  "basic_features": {
+    "suf_": "", "gen=F|gen=M": "Gender=Fem,Masc", "gen=F": "Gender=Fem", "gen=M": "Gender=Masc",
+    "num=S": "Number=Sing", "num=P": "Number=Plur",
+    "per=A": "Person=1,2,3", "per=": "Person=",
+    "tense=BEINONI": "VerbForm=Part", "tense=TOINFINITIVE": "VerbForm=Inf",
+    "tense=IMPERATIVE": "Mood=Imp",
+    "tense=PAST": "Tense=Past", "tense=FUTURE": "Tense=Fut"
+  },
+  "basic_pos": {
+    "IN": "ADP", "NNP": "PROPN", "JJ": "ADJ", "NN": "NOUN", "VB": "VERB", "RB": "ADV", "NCD": "NUM", "NEG": "ADV",
+    "PREPOSITION": "ADP", "REL": "SCONJ", "COM": "SCONJ", "CONJ": "CCONJ", "POS": "ADP", "PRP": "PRON",
+    "yyCLN": "PUNCT", "yyCM": "PUNCT", "yyDASH": "PUNCT", "yyDOT": "PUNCT", "yyELPS": "PUNCT", "yyEXCL": "PUNCT",
+    "yyLRB": "PUNCT", "yyQM": "PUNCT", "yyQUOT": "PUNCT", "yyRRB": "PUNCT", "yySCLN": "PUNCT", "ZVL": "X"
+  }
+}
+
+
