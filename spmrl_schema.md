@@ -1,0 +1,62 @@
+### SPMRL dependency labels from "A Unified Morpho-Syntactic Scheme of Stanford Dependencies"
+gf root - root
+- hd - head (governor, argument-taking)
+  - prd - verbal predicate
+    - exist - head of an existential phrase
+  - nhd - head of a nominal phrase
+    - ghd - genitive head of a nominal phrase
+- dep - dependent (governed, or an argument)
+  - arg - argument
+      - agent - agent
+      - comp - complement
+        - acomp - adjectival complement
+        - ccomp - comp clause with internal sbj
+        - xcomp - comp clause with external sbj
+        - pcomp - comp clause of a preposition
+      - obj - object
+        - dobj - direct object
+        - gobj - genitive object
+        - iobj - indirect object
+        - pobj - object of a preposition
+      - subj - subject
+        - expl - expletive subject
+        - nsubj - nominal subject
+          - nsubjpass - passive nominal sbj
+        - csubj - clausal subject
+          - csubjpass - passive clausal sbj
+  - mod - modifier
+    - appos - apposition/parenthetical
+    - abbrev - abbreviation
+    - amod - adjectival modifier
+    - advmod - adverbial modifier
+        - neg - negative modifier
+    - prepmod - prepositional modifier
+        - possmod - possession modifier
+        - tmod - temporal modifier
+    - rcmod - relative clause modifier
+    - infmod - infinitival modifier
+    - nummod - numerical modifier
+  - parataxis - ”side-by-side”, interjection
+  - conj - conjuct
+- func - functional (argument marking)
+    - marker - nominal-marking elements
+        - prep - preposition
+        - case - case marker
+            - acc - accusative case
+            - dat - dative case
+            - gen - genitive case
+            - nom - nominative case
+        - det - determiner
+            - def - definite marker
+            - dem - demonstrative
+    - sub - phrase-marking elements
+        - complm - introducing comp phrase
+        - rel - introducing relative phrase
+        - cc - introducing conjunction
+        - mark - introducing an advb phrase
+    - aux - auxiliary verb or a feature-bundle
+        - auxpass - passive auxiliary
+        - cop - copular element
+        - modal - modal verb
+        - qaux - question auxiliary
+- punct - punctuation

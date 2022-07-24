@@ -22,7 +22,7 @@
     "DEF": {"pos": "DET", "feats": {"old": "_", "new": "PronType=Art"}, "concat": "after"},
     "EX": {"pos": "VERB", "feats": {"old": "_", "new": "HebExistential=True"}},
     "P": {"pos": "ADV", "feats": {"old": "_", "new": "Prefix=True|xx_UD_REL=compound:affix"}},
-    "DUMMY_AT": {"pos": "ADP", "feats": {"old": "_", "new": "Case=Acc|xx_UD_REL=case:acc"}},
+    "DUMMY_AT": {"pos": "ADP", "feats": {"old": "_", "new": "Case=Acc|xx_UD_REL=case:acc"}, "arc_label": "case"},
     "JJT": {"pos": "ADJ", "feats": {"old": "+feats", "new": "Definite=Cons|"}},
     "MD": {"pos": "AUX", "feats": {"old": "feats+", "new": "|VerbType=Mod"}},
     "QW": {"pos": "ADV", "feats": {"old": "_", "new": "PronType=Int"}},
@@ -32,18 +32,25 @@
     "S_PRP": {"pos": "PRON", "feats": {"old": "feats+", "new": "|PronType=Prs|Reflex=Yes"}}
   },
   "basic_features": {
-    "suf_": "", "gen=F|gen=M": "Gender=Fem,Masc", "gen=F": "Gender=Fem", "gen=M": "Gender=Masc",
+    "gen=F|gen=M": "Gender=Fem,Masc", "gen=F": "Gender=Fem", "gen=M": "Gender=Masc",
     "num=S": "Number=Sing", "num=P": "Number=Plur",
-    "per=A": "Person=1,2,3", "per=": "Person=",
+    "per=A": "Person=1,2,3", "per=1": "Person=1", "per=2": "Person=2", "per=3": "Person=3",
     "tense=BEINONI": "VerbForm=Part", "tense=TOINFINITIVE": "VerbForm=Inf",
     "tense=IMPERATIVE": "Mood=Imp",
     "tense=PAST": "Tense=Past", "tense=FUTURE": "Tense=Fut"
   },
   "basic_pos": {
-    "IN": "ADP", "NNP": "PROPN", "JJ": "ADJ", "NN": "NOUN", "VB": "VERB", "RB": "ADV", "NCD": "NUM", "NEG": "ADV",
+    "ADVERB": "ADP", "IN": "ADP", "INTJ": "INTJ", "NNP": "PROPN", "JJ": "ADJ", "NN": "NOUN", "VB": "VERB", "RB": "ADV", "NCD": "NUM", "NEG": "ADV",
     "PREPOSITION": "ADP", "REL": "SCONJ", "COM": "SCONJ", "CONJ": "CCONJ", "POS": "ADP", "PRP": "PRON",
     "yyCLN": "PUNCT", "yyCM": "PUNCT", "yyDASH": "PUNCT", "yyDOT": "PUNCT", "yyELPS": "PUNCT", "yyEXCL": "PUNCT",
     "yyLRB": "PUNCT", "yyQM": "PUNCT", "yyQUOT": "PUNCT", "yyRRB": "PUNCT", "yySCLN": "PUNCT", "ZVL": "X"
+  },
+  "basic_labels": {
+    "subj": "nsubj",
+    "num": "nummod",
+    "quantmod": "det",
+    "posspmod": "case:gen",
+    "gen": "case:gen"
   }
 }
 
