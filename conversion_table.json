@@ -29,7 +29,8 @@
     "TEMP": {"pos": "SCONJ", "feats": {"old": "_", "new": "Case=Tem|xx_UD_REL=mark"}},
     "DTT": {"pos": "DET", "feats": {"old": "_", "new": "Definite=Cons"}},
     "S_ANP": {"pos": "PRON", "feats": {"old": "+feats+", "new": ["Case=Acc|", "|PronType=Prs"]}},
-    "S_PRP": {"pos": "PRON", "feats": {"old": "feats+", "new": "|PronType=Prs|Reflex=Yes"}}
+    "S_PRP": {"pos": "PRON", "feats": {"old": "feats+", "new": "|PronType=Prs|Reflex=Yes"}},
+    "INTJ": {"pos": "INTJ", "feats": {"old": "_", "new": ""}, "arc_label": "discourse"}
   },
   "basic_features": {
     "gen=F|gen=M": "Gender=Fem,Masc", "gen=F": "Gender=Fem", "gen=M": "Gender=Masc",
@@ -40,7 +41,7 @@
     "tense=PAST": "Tense=Past", "tense=FUTURE": "Tense=Fut"
   },
   "basic_pos": {
-    "ADVERB": "ADP", "IN": "ADP", "INTJ": "INTJ", "NNP": "PROPN", "JJ": "ADJ", "NN": "NOUN", "VB": "VERB", "RB": "ADV", "NCD": "NUM", "NEG": "ADV",
+    "ADVERB": "ADP", "IN": "ADP", "NNP": "PROPN", "JJ": "ADJ", "NN": "NOUN", "VB": "VERB", "RB": "ADV", "NCD": "NUM", "NEG": "ADV",
     "PREPOSITION": "ADP", "REL": "SCONJ", "COM": "SCONJ", "CONJ": "CCONJ", "POS": "ADP", "PRP": "PRON",
     "yyCLN": "PUNCT", "yyCM": "PUNCT", "yyDASH": "PUNCT", "yyDOT": "PUNCT", "yyELPS": "PUNCT", "yyEXCL": "PUNCT",
     "yyLRB": "PUNCT", "yyQM": "PUNCT", "yyQUOT": "PUNCT", "yyRRB": "PUNCT", "yySCLN": "PUNCT", "ZVL": "X"
@@ -50,7 +51,30 @@
     "num": "nummod",
     "quantmod": "det",
     "posspmod": "case:gen",
-    "gen": "case:gen"
+    "gen": "case:gen",
+    "acomp": "xcomp",
+    "amod": "amod",
+    "advmod": "advmod",
+    "appos": "appos",
+    "aux": "cop",
+    "cop": "cop",
+    "compound": "fixed",
+    "hd": "obj",
+    "mwe": "fixed",
+    "goeswith": "compound:affix",
+    "nn": "flat:name",
+    "number": "nummod",
+    "obj": "obj",
+    "parataxis": "parataxis",
+    "pcomp": "advcl",
+    "pobj": "obl",
+    "prepmod": "case",
+    "punct": "punct",
+    "xcomp": "xcomp"
+  },
+  "labels_with_features_changed": {
+    "def": {"label": "det:def", "pos": "DET", "feats": {"old": "_", "new": "|PronType=Art"}},
+    "gen": {"label": "case:gen", "pos": "ADP", "feats": {"old": "_", "new": "Case=Gen"}}
   }
 }
 
