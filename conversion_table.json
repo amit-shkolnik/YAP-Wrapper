@@ -1,7 +1,7 @@
 {
   "pronouns": {
-    "suf_gen=F,M|suf_num=P|suf_per=1": "_אנחנו",
-    "suf_gen=F,M|suf_num=S|suf_per=1": "_אני",
+    "suf_gen=F|suf_gen=M|suf_num=P|suf_per=1": "_אנחנו",
+    "suf_gen=F|suf_gen=M|suf_num=S|suf_per=1": "_אני",
     "suf_gen=M|suf_num=S|suf_per=2": "_אתה",
     "suf_gen=F|suf_num=S|suf_per=2": "_את",
     "suf_gen=M|suf_num=P|suf_per=2": "_אתם",
@@ -12,7 +12,7 @@
     "suf_gen=M|suf_num=S|suf_per=3": "_הוא"
   },
   "entire_line_pos_conversion": {
-    "AT": {"pos": "ADP", "feats": {"method": "_", "addition": "Case=Acc|xx_UD_REL=case:acc"}},
+    "AT": {"pos": "ADP", "feats": {"method": "_", "addition": "Case=Acc"}, "arc_label": "case:acc"},
     "BN": {"pos": "VERB", "feats": {"method": "feats+", "addition": "VerbForm=Part"}},
     "BNT": {"pos": "VERB", "feats": {"method": "+feats+", "addition": ["Definite=Cons", "VerbForm=Part"]}},
     "CD": {"pos": "NUM", "feats": "feats"},
@@ -21,12 +21,12 @@
     "COP": {"pos": "AUX", "feats": {"method": "feats+", "addition": "VerbType=Cop|VerbForm=Part"}},
     "DEF": {"pos": "DET", "feats": {"method": "_", "addition": "PronType=Art"}, "concat": "after"},
     "EX": {"pos": "VERB", "feats": {"method": "_", "addition": "HebExistential=True"}},
-    "P": {"pos": "ADV", "feats": {"method": "_", "addition": "Prefix=True|xx_UD_REL=compound:affix"}},
-    "DUMMY_AT": {"pos": "ADP", "feats": {"method": "_", "addition": "Case=Acc|xx_UD_REL=case:acc"}, "arc_label": "case"},
+    "P": {"pos": "ADV", "feats": {"method": "_", "addition": "Prefix=True"}, "arc_label": "compound:affix"},
+    "DUMMY_AT": {"pos": "ADP", "feats": {"method": "_", "addition": "Case=Acc"}, "arc_label": "case:acc"},
     "JJT": {"pos": "ADJ", "feats": {"method": "+feats", "addition": "Definite=Cons"}},
     "MD": {"pos": "AUX", "feats": {"method": "feats+", "addition": "VerbType=Mod"}},
     "QW": {"pos": "ADV", "feats": {"method": "feats+", "addition": "PronType=Int"}},
-    "TEMP": {"pos": "SCONJ", "feats": {"method": "_", "addition": "Case=Tem|xx_UD_REL=mark"}},
+    "TEMP": {"pos": "SCONJ", "feats": {"method": "_", "addition": "Case=Tem"}, "arc_label": "mark"},
     "DTT": {"pos": "DET", "feats": {"method": "_", "addition": "Definite=Cons"}},
     "S_ANP": {"pos": "PRON", "feats": {"method": "+feats+", "addition": ["Case=Acc", "PronType=Prs"]}},
     "S_PRP": {"pos": "PRON", "feats": {"method": "feats+", "addition": "PronType=Prs|Reflex=Yes"}},
@@ -71,7 +71,9 @@
     "prepmod": "case",
     "punct": "punct",
     "xcomp": "xcomp",
-    "gobj": "compound:smixut"
+    "gobj": "compound:smixut",
+    "advcl": "advcl",
+    "relcomp": "acl:relcl"
   },
   "labels_with_features_changed": {
     "def": {"label": "det:def", "pos": "DET", "feats": {"method": "feats+", "addition": "PronType=Art"}},

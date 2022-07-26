@@ -25,6 +25,7 @@ import re
 from enums import *
 from hebtokenizer import HebTokenizer
 from spmrl_to_ud import convert_dep_tree_to_ud
+pd.set_option('display.max_colwidth', -1)
 
 
 class YapApi(object):
@@ -316,10 +317,11 @@ class YapApi(object):
         df=pd.DataFrame(list_of_dict)
         return df            
 
-    def print_in_conllu_format(self, response: dict):
-        new_dict={}
-        for k,v in response.items():
-            new_dict[k]=[]
+    @staticmethod
+    def print_in_conllu_format(response: dict):
+        new_dict = dict()
+        for k, v in response.items():
+            new_dict[k] = []
             print("")
             print(k)
             for item in str( v).split("\n\n"):
@@ -331,22 +333,22 @@ class YapApi(object):
 
 if __name__ == '__main__':
     # The text to be processed.
-    text = "עכשיו אני מרגיש כאילו לא יודע כלום עכשיו אני מחיש את צעדיי היא מסתכלת בחלון רואה אותי עובר בחוץ היא לא יודעת מה עובר עליי. \
-    בתוך עיניה הכחולות ירח חם תלוי, עכשיו היא עצובה כמוני בוודאי היא מוציאה את בגדיי אוכלת לבדה ת'תות \
+    text = "עכשיו אני מרגיש כאילו לא יודע כלום. עכשיו אני מחיש את צעדיי. היא מסתכלת בחלון רואה אותי עובר בחוץ. היא לא יודעת מה עובר עליי. \
+    בתוך עיניה הכחולות ירח חם תלוי. עכשיו היא עצובה כמוני. בוודאי היא מוציאה את בגדיי, אוכלת לבדה ת'תות. \
     היא לא יודעת, מה עובר עליי. \
-    אמנם אין אהבה שאין לה סוף אבל הסוף הזה נראה לי מקולל הולך בין האנשים ברחוב צועק או או או או או או \
+    אמנם אין אהבה שאין לה סוף אבל הסוף הזה נראה לי מקולל. הולך בין האנשים ברחוב צועק או או או או או או \
     תגידו לה."
     # text = "גנן גידל דגן בגן"
     # IP of YAP server, if locally installed then '127.0.0.1'
     ip = '127.0.0.1:8000'
     yap = YapApi()
     tokenized_text = yap.run(text, ip)
-    print(tokenized_text)
-    print(yap.segmented_text)
-    print(yap.lemmas)
-    print(yap.dep_tree.to_string())
-    print(yap.md_lattice)
-    print(yap.ma_lattice)
+    print("tokenized_text: ", tokenized_text)
+    print("segmented_text: ", yap.segmented_text)
+    print("lemmas: ", yap.lemmas)
+    print("dep_tree: \n", yap.dep_tree.to_string())
+    # print(yap.md_lattice)
+    # print(yap.ma_lattice)
     print('Program end')
         
     
