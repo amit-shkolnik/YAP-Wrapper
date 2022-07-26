@@ -1,0 +1,87 @@
+{
+  "pronouns": {
+    "suf_gen=F,M|suf_num=P|suf_per=1": "_אנחנו",
+    "suf_gen=F,M|suf_num=S|suf_per=1": "_אני",
+    "suf_gen=M|suf_num=S|suf_per=2": "_אתה",
+    "suf_gen=F|suf_num=S|suf_per=2": "_את",
+    "suf_gen=M|suf_num=P|suf_per=2": "_אתם",
+    "suf_gen=F|suf_num=P|suf_per=2": "_אתן",
+    "suf_gen=F|suf_num=P|suf_per=3": "_הן",
+    "suf_gen=F|suf_num=S|suf_per=3": "_היא",
+    "suf_gen=M|suf_num=P|suf_per=3": "_הם",
+    "suf_gen=M|suf_num=S|suf_per=3": "_הוא"
+  },
+  "entire_line_pos_conversion": {
+    "AT": {"pos": "ADP", "feats": {"method": "_", "addition": "Case=Acc|xx_UD_REL=case:acc"}},
+    "BN": {"pos": "VERB", "feats": {"method": "feats+", "addition": "VerbForm=Part"}},
+    "BNT": {"pos": "VERB", "feats": {"method": "+feats+", "addition": ["Definite=Cons", "VerbForm=Part"]}},
+    "CD": {"pos": "NUM", "feats": "feats"},
+    "CDT": {"pos": "NUM", "feats": {"method": "+feats", "addition": "Definite=Cons"}},
+    "NNT": {"pos": "NOUN", "feats": {"method": "+feats", "addition": "Definite=Cons"}},
+    "COP": {"pos": "AUX", "feats": {"method": "feats+", "addition": "VerbType=Cop|VerbForm=Part"}},
+    "DEF": {"pos": "DET", "feats": {"method": "_", "addition": "PronType=Art"}, "concat": "after"},
+    "EX": {"pos": "VERB", "feats": {"method": "_", "addition": "HebExistential=True"}},
+    "P": {"pos": "ADV", "feats": {"method": "_", "addition": "Prefix=True|xx_UD_REL=compound:affix"}},
+    "DUMMY_AT": {"pos": "ADP", "feats": {"method": "_", "addition": "Case=Acc|xx_UD_REL=case:acc"}, "arc_label": "case"},
+    "JJT": {"pos": "ADJ", "feats": {"method": "+feats", "addition": "Definite=Cons"}},
+    "MD": {"pos": "AUX", "feats": {"method": "feats+", "addition": "VerbType=Mod"}},
+    "QW": {"pos": "ADV", "feats": {"method": "feats+", "addition": "PronType=Int"}},
+    "TEMP": {"pos": "SCONJ", "feats": {"method": "_", "addition": "Case=Tem|xx_UD_REL=mark"}},
+    "DTT": {"pos": "DET", "feats": {"method": "_", "addition": "Definite=Cons"}},
+    "S_ANP": {"pos": "PRON", "feats": {"method": "+feats+", "addition": ["Case=Acc", "PronType=Prs"]}},
+    "S_PRP": {"pos": "PRON", "feats": {"method": "feats+", "addition": "PronType=Prs|Reflex=Yes"}},
+    "INTJ": {"pos": "INTJ", "feats": {"method": "_", "addition": ""}, "arc_label": "discourse"}
+  },
+  "basic_features": {
+    "gen=F|gen=M": "Gender=Fem,Masc", "gen=F": "Gender=Fem", "gen=M": "Gender=Masc",
+    "num=S": "Number=Sing", "num=P": "Number=Plur",
+    "per=A": "Person=1,2,3", "per=1": "Person=1", "per=2": "Person=2", "per=3": "Person=3",
+    "tense=BEINONI": "VerbForm=Part", "tense=TOINFINITIVE": "VerbForm=Inf",
+    "tense=IMPERATIVE": "Mood=Imp",
+    "tense=PAST": "Tense=Past", "tense=FUTURE": "Tense=Fut"
+  },
+  "basic_pos": {
+    "ADVERB": "ADP", "IN": "ADP", "NNP": "PROPN", "JJ": "ADJ", "NN": "NOUN", "VB": "VERB", "RB": "ADV", "NCD": "NUM", "NEG": "ADV",
+    "PREPOSITION": "ADP", "REL": "SCONJ", "COM": "SCONJ", "CONJ": "CCONJ", "POS": "ADP", "PRP": "PRON",
+    "yyCLN": "PUNCT", "yyCM": "PUNCT", "yyDASH": "PUNCT", "yyDOT": "PUNCT", "yyELPS": "PUNCT", "yyEXCL": "PUNCT",
+    "yyLRB": "PUNCT", "yyQM": "PUNCT", "yyQUOT": "PUNCT", "yyRRB": "PUNCT", "yySCLN": "PUNCT", "ZVL": "X"
+  },
+  "basic_labels": {
+    "subj": "nsubj",
+    "num": "nummod",
+    "quantmod": "det",
+    "posspmod": "case:gen",
+    "gen": "case:gen",
+    "acomp": "xcomp",
+    "amod": "amod",
+    "advmod": "advmod",
+    "appos": "appos",
+    "aux": "cop",
+    "cop": "cop",
+    "compound": "fixed",
+    "hd": "obj",
+    "mwe": "fixed",
+    "goeswith": "compound:affix",
+    "nn": "flat:name",
+    "number": "nummod",
+    "obj": "obj",
+    "parataxis": "parataxis",
+    "pcomp": "advcl",
+    "pobj": "obl",
+    "prepmod": "case",
+    "punct": "punct",
+    "xcomp": "xcomp",
+    "gobj": "compound:smixut"
+  },
+  "labels_with_features_changed": {
+    "def": {"label": "det:def", "pos": "DET", "feats": {"method": "feats+", "addition": "PronType=Art"}},
+    "gen": {"label": "case:gen", "pos": "ADP", "feats": {"method": "_", "addition": "Case=Gen"}}
+  },
+  "determiner_types": {
+    "PronType=Dem": ["זה", "אלה", "אלו", "הללו", "זאת", "זו", "כך"],
+    "PronType=Ind": ["כלשהו", "מישהו", "איזה"],
+    "PronType=Prs": ["הוא", "אותו"]
+  }
+}
+
+

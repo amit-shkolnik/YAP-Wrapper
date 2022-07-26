@@ -18,15 +18,13 @@
 ##    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import pandas as pd
-import numpy as np
 import requests
 import sys
 import traceback
-import csv
-import re, string
+import re
 from enums import *
 from hebtokenizer import HebTokenizer
-
+from spmrl_to_ud import convert_dep_tree_to_ud
 
 
 class YapApi(object):
@@ -38,10 +36,14 @@ class YapApi(object):
     3. Turn output CONLLU format to Dataframe & JSON.
     """   
 
-    def __init__(self):        
-        pass  
+    def __init__(self):
+        self.segmented_text = ""
+        self.lemmas = ""
+        self.dep_tree = pd.DataFrame()
+        self.md_lattice = pd.DataFrame()
+        self.ma_lattice = pd.DataFrame()
        
-    def run(self, text:str, ip:str):
+    def run(self, text: str, ip: str):
         """
         text: the text to be parsed.
         ip: YAP server IP, with port (default is 8000), if localy installed then 127.0.0.1:8000
@@ -49,106 +51,105 @@ class YapApi(object):
         try:
             print('Start Yap call')
             # Keep alpha-numeric and punctuations only.
-            alnum_text=self.clean_text(text)
-            # Tokenize...
-            tokenized_text = HebTokenizer().tokenize(alnum_text)
-            tokenized_text = ' '.join([word for (part, word) in  tokenized_text])
-            print("Tokens: {}".format(len(tokenized_text.split())))                       
-            self.init_data_items()                        
-            # Split to sentences for best performance.
-            text_arr=self.split_text_to_sentences(tokenized_text)
-            for i, sntnce_or_prgrph in enumerate( text_arr):
-                # Actual call to YAP server
-                rspns=self.call_yap(sntnce_or_prgrph, ip)
-                print('End Yap call {} /{}'.format( i ,len(text_arr)-1))  
-                # Expose this code to print the results iin Conllu format
-                #conllu_dict=self.print_in_conllu_format(rspns)
-                # Turn CONLLU format to dataframe
-                _dep_tree, _md_lattice, _ma_lattice=self.conllu_format_to_dataframe(rspns)
-                _segmented_text= ' '.join( _dep_tree[yap_cols.word.name])
-                _lemmas=' '.join(_dep_tree[yap_cols.lemma.name])
-                self.append_prgrph_rslts(_dep_tree, _md_lattice, _ma_lattice, _segmented_text, _lemmas)                 
-            return tokenized_text, self.segmented_text, self.lemmas, self.dep_tree, self.md_lattice, self.ma_lattice            
+            tokenized_text = self.parse_text(text, ip)
+            return tokenized_text
 
         except Exception as err:
-            print( sys.exc_info()[0])            
-            print( traceback.format_exc())          
-            print( str(err))    
+            print(sys.exc_info()[0])
+            print(traceback.format_exc())
+            print(str(err))
         print("Unexpected end of program")
-        
+
+    def parse_text(self, text, ip):
+        alnum_text = self.clean_text(text)
+        # Tokenize...
+        tokenized_text = HebTokenizer().tokenize(alnum_text)
+        tokenized_text = ' '.join([word for (part, word) in tokenized_text])
+        print("Tokens: {}".format(len(tokenized_text.split())))
+        # Split to sentences for best performance.
+        text_arr = self.split_text_to_sentences(tokenized_text)
+        for i, sntnce_or_paragraph in enumerate(text_arr):
+            print('End Yap call {} /{}'.format(i, len(text_arr) - 1))
+            _dep_tree, _md_lattice, _ma_lattice, _segmented_text, _lemmas = self.parse_sentence(sntnce_or_paragraph, ip)
+            _dep_tree = convert_dep_tree_to_ud(_dep_tree)
+            self.append_paragraph_results(_dep_tree, _md_lattice, _ma_lattice, _segmented_text, _lemmas)
+
+        return tokenized_text
+
+    def parse_sentence(self, sent_text, ip):
+        response = self.call_yap(sent_text, ip)
+        _dep_tree, _md_lattice, _ma_lattice = self.conllu_format_to_dataframe(response)
+        _segmented_text = ' '.join(_dep_tree[yap_cols.word.name])
+        _lemmas = ' '.join(_dep_tree[yap_cols.lemma.name])
+        return _dep_tree, _md_lattice, _ma_lattice, _segmented_text, _lemmas
+
     def split_text_to_sentences(self, tokenized_text):
         """
         YAP better perform on sentence-by-sentence.
         Also, dep_tree is limited to 256 nodes.
         """
-        max_len=150
-        arr=tokenized_text.strip().split()        
+        max_len = 150
+        arr = tokenized_text.strip().split()
         sentences=[]
         # Finding next sentence break.        
-        while (True):
-            stop_points=[h for h in [i for i, e in enumerate(arr) if re.match(r"[!|.|?]",e)] ]
-            if len(stop_points)>0:
-                stop_point=min(stop_points)
+        while True:
+            stop_points=[h for h in [i for i, e in enumerate(arr) if re.match(r"[!|.|?]", e)] ]
+            if len(stop_points) > 0:
+                stop_point = min(stop_points)
                 # Keep several sentence breaker as 1 word, like "...." or "???!!!"
                 while True:
                     stop_points.remove(stop_point)
-                    if len(stop_points)>1 and min(stop_points)==(stop_point+1):
-                        stop_point=stop_point+1
+                    if len(stop_points) > 1 and min(stop_points) == (stop_point+1):
+                        stop_point = stop_point+1
                     else:
                         break
                 # Case there is no sentence break, and this split > MAX LEN:
-                sntnc=arr[:stop_point+1]
-                if len(sntnc) >max_len:
-                    while(len(sntnc) >max_len):
+                sntnc = arr[:stop_point+1]
+                if len(sntnc) > max_len:
+                    while len(sntnc) > max_len:
                         sentences.append(" ".join(sntnc[:140]))
-                        sntnc=sntnc[140:]
+                        sntnc = sntnc[140:]
                     sentences.append(" ".join(sntnc))
                 # Normal: sentence is less then 150 words...
                 else: 
-                    sentences.append(" ".join(arr[:stop_point+1] ))
-                arr=arr[stop_point+1:]                                 
+                    sentences.append(" ".join(arr[:stop_point+1]))
+                arr = arr[stop_point+1:]
             else:
                 break       
-        if len(arr)>0:            
+        if len(arr) > 0:
             sentences.append(" ".join(arr))
         return sentences
           
-    def clean_text(self, text:str):
-        text=text.replace('\n', ' ').replace('\r', ' ')        
-        pattern= re.compile(r'[^א-ת\s.,!?a-zA-Z]')        
-        alnum_text =pattern.sub(' ', text)
-        while(alnum_text.find('  ')>-1):
+    def clean_text(self, text: str):
+        text = text.replace('\n', ' ').replace('\r', ' ')
+        pattern = re.compile(r'[^א-ת\s.,!?a-zA-Z]')
+        alnum_text = pattern.sub(' ', text)
+        while alnum_text.find('  ') > -1:
             alnum_text=alnum_text.replace('  ', ' ')
-        return alnum_text            
+        return alnum_text
 
-    def init_data_items(self):
-        self.segmented_text=""
-        self.lemmas=""
-        self.dep_tree=pd.DataFrame()
-        self.md_lattice=pd.DataFrame()
-        self.ma_lattice=pd.DataFrame()            
-
-    def append_prgrph_rslts(self, _dep_tree:pd.DataFrame, _md_lattice:pd.DataFrame, _ma_lattice:pd.DataFrame, 
-                            _segmented_text:str, _lemmas:str):  
-        self.segmented_text="{} {}".format(self.segmented_text, _segmented_text).strip()
-        self.lemmas="{} {}".format(self.lemmas, _lemmas).strip()
-        self.dep_tree=pd.concat([self.dep_tree, _dep_tree])
-        self.md_lattice=pd.concat([self.md_lattice, _md_lattice])
-        self.ma_lattice=pd.concat([self.ma_lattice, _ma_lattice])
+    def append_paragraph_results(self, _dep_tree: pd.DataFrame, _md_lattice: pd.DataFrame, _ma_lattice: pd.DataFrame,
+                            _segmented_text: str, _lemmas: str):
+        self.segmented_text = "{} {}".format(self.segmented_text, _segmented_text).strip()
+        self.lemmas = "{} {}".format(self.lemmas, _lemmas).strip()
+        self.dep_tree = pd.concat([self.dep_tree, _dep_tree])
+        self.md_lattice = pd.concat([self.md_lattice, _md_lattice])
+        self.ma_lattice = pd.concat([self.ma_lattice, _ma_lattice])
 
     def split_long_text(self, tokenized_text:str):
         # Max num of words YAP can handle at one call.
         max_len=150
         arr=tokenized_text.split()        
         rslt=[]
-        while len(arr)> max_len:          
+        stop_point = 0
+        while len(arr) > max_len:
             # Finding next sentence break.
             try:                
-                stop_point=min([h for h in [i for i, e in enumerate(arr) if re.match(r"[!|.|?]",e)] if h> max_len])                            
+                stop_point = min([h for h in [i for i, e in enumerate(arr) if re.match(r"[!|.|?]", e)] if h > max_len])
             except Exception as err:
-                if str(err) =="min() arg is an empty sequence":
+                if str(err) == "min() arg is an empty sequence":
                     stop_point=150
-                if len(arr)<stop_point:
+                if len(arr) < stop_point:
                     stop_point=len(arr)-1
             rslt.append(" ".join(arr[: (stop_point+1)]))
             arr=arr[(stop_point+1):]
@@ -161,7 +162,6 @@ class YapApi(object):
         """
         url = "{}{}{}".format( "http://", ip, "/yap/heb/joint")
         _json='{"text":"  '+text+'  "}'         
-        headers = {'content-type': 'application/json'}
         r = requests.post(url,
                   data=_json.encode('utf-8'),
                   headers={'Content-type': 'application/json; charset=utf-8'})
@@ -169,25 +169,25 @@ class YapApi(object):
         return r.json()
 
     def check_response_status(self, response: requests.Response):
-         if response.status_code != 200:
-                print('url: %s' %(response.url))                
-                if response.json() != None:
-                    print("response : {}".format( response.json()))                         
-                if response.text != None:
-                    print('Reason: Text: %s'%( response.text))
+        if response.status_code != 200:
+            print('url: %s' %(response.url))
+            if response.json():
+                print("response : {}".format( response.json()))
+            if response.text:
+                print('Reason: Text: %s'%( response.text))
 
-    def conllu_format_to_dataframe(self, rspns:dict):       
-        for k,v in rspns.items():           
-            if k==yap_ent.dep_tree.name:
-                dep_tree=self.parse_dep_tree(v)
-            elif k==yap_ent.md_lattice.name:
-                md_lattice=self.parse_md_lattice(v)
-            elif k==yap_ent.ma_lattice.name:
-                ma_lattice=self.parse_ma_lattice(v)
-        return dep_tree.fillna(-1), md_lattice.fillna(-1), ma_lattice.fillna(-1)
+    def conllu_format_to_dataframe(self, response:dict):
+        try:
+            dep_tree = self.parse_dep_tree(response.get('dep_tree'))
+            md_lattice = self.parse_md_lattice(response.get('md_lattice'))
+            ma_lattice = self.parse_ma_lattice(response.get('ma_lattice'))
+            return dep_tree.fillna(-1), md_lattice.fillna(-1), ma_lattice.fillna(-1)
+        except:
+            raise Exception('Invalid YAP response. Please check your input.')
 
-    def parse_dep_tree(self, v:str):
-        data=[sub.split("\t") for item  in str(v).split("\n\n") for sub in item.split("\n")]
+    @staticmethod
+    def parse_dep_tree(v: str):
+        data=[sub.split("\t") for item in str(v).split("\n\n") for sub in item.split("\n")]
         labels=[yap_cols.num.name, yap_cols.word.name, yap_cols.lemma.name, yap_cols.pos.name, yap_cols.pos_2.name, 
                 yap_cols.empty.name, yap_cols.dependency_arc.name, yap_cols.dependency_part.name,
                         yap_cols.dependency_arc_2.name, yap_cols.dependency_part_2.name]        
@@ -204,7 +204,8 @@ class YapApi(object):
         df.loc[df[yap_cols.lemma.name] == '', [yap_cols.lemma.name]] =df[yap_cols.word.name]
         return df
 
-    def parse_md_lattice(self, v:str):
+    @staticmethod
+    def parse_md_lattice(v: str):
         data=[sub.split("\t") for item  in str(v).split("\n\n") for sub in item.split("\n")]
         labels=[yap_cols.num.name, yap_cols.num_2.name,yap_cols.word.name, yap_cols.lemma.name, 
                 yap_cols.pos.name, yap_cols.pos_2.name,                
@@ -249,7 +250,8 @@ class YapApi(object):
         df=pd.DataFrame(list_of_dict)
         return df
 
-    def parse_ma_lattice(self, v:str):
+    @staticmethod
+    def parse_ma_lattice(v: str):
         data=[sub.split("\t") for item  in str(v).split("\n\n") for sub in item.split("\n")]
         labels=[yap_cols.num.name, 
                 yap_cols.num_2.name,
@@ -314,14 +316,14 @@ class YapApi(object):
         df=pd.DataFrame(list_of_dict)
         return df            
 
-    def print_in_conllu_format(self, rspns:dict):
-       new_dict={}
-       for k,v in rspns.items():           
-           new_dict[k]=[]
-           print("")
-           print(k)
-           for item in str( v).split("\n\n"):
-               for sub_item in item.split("\n"):               
+    def print_in_conllu_format(self, response: dict):
+        new_dict={}
+        for k,v in response.items():
+            new_dict[k]=[]
+            print("")
+            print(k)
+            for item in str( v).split("\n\n"):
+                for sub_item in item.split("\n"):
                     if sub_item!="":
                         print(sub_item)
                         new_dict[k].append(sub_item)
@@ -333,21 +335,22 @@ if __name__ == '__main__':
     בתוך עיניה הכחולות ירח חם תלוי, עכשיו היא עצובה כמוני בוודאי היא מוציאה את בגדיי אוכלת לבדה ת'תות \
     היא לא יודעת, מה עובר עליי. \
     אמנם אין אהבה שאין לה סוף אבל הסוף הזה נראה לי מקולל הולך בין האנשים ברחוב צועק או או או או או או \
-    תגידו לה."   
-    
+    תגידו לה."
+    # text = "גנן גידל דגן בגן"
     # IP of YAP server, if locally installed then '127.0.0.1'
-    ip='127.0.0.1:8000'
-    yap=YapApi()    
-    tokenized_text, segmented_text, lemmas, dep_tree, md_lattice, ma_lattice=yap.run(text, ip)                 
+    ip = '127.0.0.1:8000'
+    yap = YapApi()
+    tokenized_text = yap.run(text, ip)
     print(tokenized_text)
-    print(segmented_text)
-    print(lemmas)
-    print(dep_tree.to_string())
-    print(md_lattice)
-    print(ma_lattice)
+    print(yap.segmented_text)
+    print(yap.lemmas)
+    print(yap.dep_tree.to_string())
+    print(yap.md_lattice)
+    print(yap.ma_lattice)
     print('Program end')
         
     
+
 
 
 

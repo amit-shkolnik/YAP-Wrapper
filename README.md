@@ -38,6 +38,8 @@ Then output is:
 ![alt text](https://github.com/amit-shkolnik/YAP-Wrapper/blob/master/ma_lattice.png)
 
 
+
+In this version, the returned language schema follows the UD guidelines, rather than the original YAP SPMRL. 
+The conversion follows the SPMRL guidelines as illustrated in ["A Unified Morpho-Syntactic Scheme of Stanford Dependencies"](https://aclanthology.org/P13-2103.pdf)
+
 This code is fully free under Apaceh 2.0 (https://www.apache.org/licenses/LICENSE-2.0) (no guarantees!). 
-
-
