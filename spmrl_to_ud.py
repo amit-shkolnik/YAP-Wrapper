@@ -13,50 +13,65 @@ FEATURES = CONVERSION_TABLE["basic_features"]
 ENTIRE_LINE = CONVERSION_TABLE["entire_line_pos_conversion"]
 
 
-def reorganize_conjunction(graph, node_idx):
-    node = graph.nodes[node_idx]
-    top_label = node["pos"]["old"]
-    children = [n for n in graph.nodes if graph.nodes[n]["parent"] == node_idx]
-    min_node = graph.nodes[children[0]]
-    min_node["label"]["new"] = top_label
+def update_label(graph, node_idx, parent_idx, new_label):
+    graph.nodes[node_idx]["arc_label"]["new"] = new_label
+    graph.nodes[node_idx]["parent"] = parent_idx
+    graph.add_edge(parent_idx, node_idx, label=new_label)
 
 
-def reverse_arc_direction(graph, node_idx, new_head_label):
-    node = graph.nodes[node_idx]
-    parent = list(graph.predecessors(node_idx))
-    head_children = [n for n in graph.successors(node_idx) if graph.nodes[n]["arc_label"]["old"] == new_head_label]
-    if head_children:
-        graph.remove_edge(parent[0], node_idx)
-        graph.remove_edge(node_idx, head_children[0])
-        graph.add_edge(parent[0], head_children[0], label="obl")
-        graph.add_edge(head_children[0], node_idx, label="case")
+def reorganize_conjunction(graph, conj_node_idx, conj_node, conj_parent_idx, conjuncts):
+    graph.remove_edge(conj_node_idx, conjuncts[0])
+    update_label(graph, conjuncts[0], conj_parent_idx, conj_node["arc_label"]["old"])
+    for conjunct in conjuncts[1:]:
+        graph.remove_edge(conj_node_idx, conjunct)
+        # this should be conj also in SPMRL but there are occasional errors:
+        update_label(graph, conjunct, conjuncts[0], "conj")
+    graph.remove_edge(conj_parent_idx, conj_node_idx)
+    update_label(graph, conj_node_idx, conjuncts[-1], "cc")
+    return graph
+
+def reverse_arc_direction(graph, node_idx, self_label, marker_label):
+    parents = list(graph.predecessors(node_idx)) # idx of prepmod
+    grandparent = list(graph.predecessors(parents[0]))[0] # idx of head
+    graph.remove_edge(grandparent, parents[0])
+    graph.remove_edge(parents[0], node_idx)
+    update_label(graph=graph, node_idx=node_idx, parent_idx=grandparent, new_label=self_label)
+    update_label(graph=graph, node_idx=parents[0], parent_idx=node_idx, new_label=marker_label)
+    return graph
 
 
-def convert_labels(graph, node_idx):
-    node = graph.nodes[node_idx]
-    parent_idx = list(graph.predecessors(node_idx))
+def convert_labels(graph, node_idx, node, parents):
+    children = list(graph.successors(node_idx))
     entire_row_changes = CONVERSION_TABLE["labels_with_features_changed"]
-    if node["arc_label"]["old"] == "prepmod":
-        reverse_arc_direction(graph, node_idx, "pobj")
     old_label = node['arc_label']['old']
-    if parent_idx:
-        parent = graph.nodes[parent_idx[0]]
-        if old_label == "neg":
-            node["arc_label"]["new"] = "det" if parent["pos"]["old"] == "NN" else "advmod"
+    if node["pos"]["old"] == "CONJ": # the cc can by of any label.
+        graph = reorganize_conjunction(graph, node_idx, node, parents[0], children)
+    if node["arc_label"]["old"] == "pobj":
+        graph = reverse_arc_direction(graph, node_idx, "obl", marker_label="case")
+    elif node["arc_label"]["old"] == "ccomp":
+        graph = reverse_arc_direction(graph, node_idx, "ccomp", marker_label="mark")
+    elif node["arc_label"]["old"] == "advcl":
+        graph = reverse_arc_direction(graph, node_idx, "advcl", marker_label="mark")
+    elif node["arc_label"]["old"] == "relcomp":
+        graph = reverse_arc_direction(graph, node_idx, "acl:relcl", marker_label="mark")
+    if old_label == "neg":
+        node["arc_label"]["new"] = "det" if graph.nodes[parents[0]]["pos"]["old"] == "NN" else "advmod"
 
     if old_label in LABELS.keys():
-        node['arc_label']['new'] = LABELS[old_label]
+        update_label(graph, node_idx, parents[0], LABELS[old_label])
+
     elif old_label in entire_row_changes.keys():
-        node["arc_label"]["new"] = entire_row_changes[old_label]["label"]
+        update_label(graph, node_idx, parents[0], entire_row_changes[old_label]["label"])
         node["pos"]["new"] = entire_row_changes[old_label]["pos"]
         node["features"]["new"] = compose_features(old_label, node, entire_row_changes)
+    return graph
 
 
-def convert_features(graph, node_idx):
-    node = graph.nodes[node_idx]
+def convert_features(node):
     old_features = node["features"]["old"]
 
     noun_feats = "|".join([x for x in old_features.split("|") if 'suf' not in x])
+
     if not node["features"]["new"]:
         if 'suf_' in old_features:
             if node["pos"]["old"] == 'NN':
@@ -76,6 +91,16 @@ def convert_features(graph, node_idx):
                     old_features = old_features.replace(feature, FEATURES[feature])
             node["features"]["new"] = old_features
             specific_feats_conversions(node)
+            if node["pos"]["new"] == "PRON":
+                if node["lemma"]["old"] == "עצמו":
+                    if node["arc_label"]["old"] == "nn":
+                        node["features"]["new"] += f"{node['features']['new']}|PronType=Emp|Reflex=Yes" if node["features"]["new"] else "PronType=Emp|Reflex=Yes"
+                    else:
+                        node["features"]["new"] += f"{node['features']['new']}|PronType=Prs|Reflex=Yes" if node["features"]["new"] else "PronType=Emp|Reflex=Prs"
+                elif "PronType" not in node["features"]["new"]:
+                    for prontype, lemmas in CONVERSION_TABLE["determiner_types"].items():
+                        if node["lemma"]["old"] in lemmas:
+                            node["features"]["new"] = f"{node['features']['new']}|PronType=Emp" if node["features"]["new"] else prontype
 
 
 def specific_feats_conversions(node):
@@ -89,8 +114,7 @@ def specific_feats_conversions(node):
     return node
 
 
-def convert_pos(graph, node_idx):
-    node = graph.nodes[node_idx]
+def convert_pos(graph, node_idx, node):
     if node['pos']['old'] == 'S_PRN':
         if graph.nodes[node_idx-1]['pos']['old'] == 'AT':
             graph.nodes[node_idx - 1]["features"]["new"] = 'Case=Acc'
@@ -114,22 +138,30 @@ def convert_pos(graph, node_idx):
 
 def compose_features(key, node, map):
     replacement_feats = map[key]["feats"]
-    if replacement_feats["old"] == "+feats+":
-        features = replacement_feats["new"][0] + node['features']['old'] + replacement_feats["new"][1]
-    elif replacement_feats["old"] == "feats+":
-        features = node['features']['old'] + replacement_feats["new"][0]
-    elif replacement_feats["old"] == "+feats":
-        features = replacement_feats["new"][0] + node['features']['old']
+    if replacement_feats["method"] == "+feats+":
+        features = f"{replacement_feats['addition'][0]}|{node['features']['old']}|{replacement_feats['addition'][1]}"
+    elif replacement_feats["method"] == "feats+":
+        if node['features']['old']:
+            features = f"{node['features']['old']}|{replacement_feats['addition'][0]}"
+        else:
+            features = replacement_feats['addition'][0]
+    elif replacement_feats["method"] == "+feats":
+        features = f"{replacement_feats['addition'][0]}|{node['features']['old']}"
     else:
-        features = replacement_feats["new"][0]
+        features = replacement_feats["addition"][0]
     return features
 
 
 def convert_graph(graph: nx.DiGraph) -> nx.DiGraph:
     for node_idx in graph.nodes:
-        convert_pos(graph, node_idx)
-        convert_features(graph, node_idx)
-        convert_labels(graph, node_idx)
+        node = graph.nodes[node_idx]
+        parents = list(graph.predecessors(node_idx))
+        graph = convert_pos(graph, node_idx, node)
+        convert_features(node)
+        graph = convert_labels(graph, node_idx, node, parents)
+        for att in ["word", "pos", "lemma", "arc_label"]:
+            if not node[att]["new"]:
+                node[att]["new"] = node[att]["old"]
     return graph
 
 
@@ -215,21 +247,38 @@ def convert_sentence_to_graph(dep_tree) -> nx.DiGraph:
     return graph
 
 
+def convert_dep_tree_to_ud(dep_tree: pd.DataFrame) -> pd.DataFrame:
+    graph = convert_sentence_to_graph(dep_tree)
+    nodelist = list(graph.nodes(data=True))
+    df = pd.DataFrame(columns=["num", "word", "lemma", "pos", "features", "dependency_arc", "head"])
+    for node in nodelist:
+        df = df.append(
+            {
+                "num": str(node[0]+1),
+                "word": node[1]["word"]["new"],
+                "lemma": node[1]["lemma"]["new"],
+                "pos": node[1]["pos"]["new"],
+                "features":node[1]["features"]["new"],
+                "dependency_arc": node[1]["arc_label"]["new"],
+                "head": str(node[1]["parent"]+1)
+        }, ignore_index=True)
+    return df
+
+
 if __name__ == '__main__':
     from yap_api import YapApi
     import matplotlib.pyplot as plt
-    # text = "הם מצאו דרך לעשות קופה"
-    text = "גנן גידל דגן בגנו"
+    text = "האיש שהכרתי ברח"
+    # text = "גנן גידל דגן בגן"
     ip = '127.0.0.1:8000'
     yap = YapApi()
     parsed_text = yap.run(text, ip)
     _dep_tree, _md_lattice, _ma_lattice, _segmented_text, _lemmas = yap.parse_sentence(text, ip)
 
     tree = convert_sentence_to_graph(_dep_tree)
-    for n in tree.nodes:
-        print(tree.nodes[n])
 
     pos = nx.spring_layout(tree)
+
     nx.draw_networkx_nodes(tree, pos, cmap=plt.get_cmap('jet'), node_size=500, label="word")
     nx.draw_networkx_labels(tree, pos)
     nx.draw_networkx_edge_labels(tree, pos)

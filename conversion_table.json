@@ -12,25 +12,25 @@
     "suf_gen=M|suf_num=S|suf_per=3": "_הוא"
   },
   "entire_line_pos_conversion": {
-    "AT": {"pos": "ADP", "feats": {"old": "_", "new": "Case=Acc|xx_UD_REL=case:acc"}},
-    "BN": {"pos": "VERB", "feats": {"old": "feats+", "new": "|VerbForm=Part"}},
-    "BNT": {"pos": "VERB", "feats": {"old": "+feats+", "new": ["Definite=Cons|", "|VerbForm=Part"]}},
+    "AT": {"pos": "ADP", "feats": {"method": "_", "addition": "Case=Acc|xx_UD_REL=case:acc"}},
+    "BN": {"pos": "VERB", "feats": {"method": "feats+", "addition": "VerbForm=Part"}},
+    "BNT": {"pos": "VERB", "feats": {"method": "+feats+", "addition": ["Definite=Cons", "VerbForm=Part"]}},
     "CD": {"pos": "NUM", "feats": "feats"},
-    "CDT": {"pos": "NUM", "feats": {"old": "+feats", "new": "Definite=Cons|"}},
-    "NNT": {"pos": "NOUN", "feats": {"old": "+feats", "new": "Definite=Cons|"}},
-    "COP": {"pos": "AUX", "feats": {"old": "feats+", "new": "|VerbType=Cop|VerbForm=Part"}},
-    "DEF": {"pos": "DET", "feats": {"old": "_", "new": "PronType=Art"}, "concat": "after"},
-    "EX": {"pos": "VERB", "feats": {"old": "_", "new": "HebExistential=True"}},
-    "P": {"pos": "ADV", "feats": {"old": "_", "new": "Prefix=True|xx_UD_REL=compound:affix"}},
-    "DUMMY_AT": {"pos": "ADP", "feats": {"old": "_", "new": "Case=Acc|xx_UD_REL=case:acc"}, "arc_label": "case"},
-    "JJT": {"pos": "ADJ", "feats": {"old": "+feats", "new": "Definite=Cons|"}},
-    "MD": {"pos": "AUX", "feats": {"old": "feats+", "new": "|VerbType=Mod"}},
-    "QW": {"pos": "ADV", "feats": {"old": "_", "new": "PronType=Int"}},
-    "TEMP": {"pos": "SCONJ", "feats": {"old": "_", "new": "Case=Tem|xx_UD_REL=mark"}},
-    "DTT": {"pos": "DET", "feats": {"old": "_", "new": "Definite=Cons"}},
-    "S_ANP": {"pos": "PRON", "feats": {"old": "+feats+", "new": ["Case=Acc|", "|PronType=Prs"]}},
-    "S_PRP": {"pos": "PRON", "feats": {"old": "feats+", "new": "|PronType=Prs|Reflex=Yes"}},
-    "INTJ": {"pos": "INTJ", "feats": {"old": "_", "new": ""}, "arc_label": "discourse"}
+    "CDT": {"pos": "NUM", "feats": {"method": "+feats", "addition": "Definite=Cons"}},
+    "NNT": {"pos": "NOUN", "feats": {"method": "+feats", "addition": "Definite=Cons"}},
+    "COP": {"pos": "AUX", "feats": {"method": "feats+", "addition": "VerbType=Cop|VerbForm=Part"}},
+    "DEF": {"pos": "DET", "feats": {"method": "_", "addition": "PronType=Art"}, "concat": "after"},
+    "EX": {"pos": "VERB", "feats": {"method": "_", "addition": "HebExistential=True"}},
+    "P": {"pos": "ADV", "feats": {"method": "_", "addition": "Prefix=True|xx_UD_REL=compound:affix"}},
+    "DUMMY_AT": {"pos": "ADP", "feats": {"method": "_", "addition": "Case=Acc|xx_UD_REL=case:acc"}, "arc_label": "case"},
+    "JJT": {"pos": "ADJ", "feats": {"method": "+feats", "addition": "Definite=Cons"}},
+    "MD": {"pos": "AUX", "feats": {"method": "feats+", "addition": "VerbType=Mod"}},
+    "QW": {"pos": "ADV", "feats": {"method": "feats+", "addition": "PronType=Int"}},
+    "TEMP": {"pos": "SCONJ", "feats": {"method": "_", "addition": "Case=Tem|xx_UD_REL=mark"}},
+    "DTT": {"pos": "DET", "feats": {"method": "_", "addition": "Definite=Cons"}},
+    "S_ANP": {"pos": "PRON", "feats": {"method": "+feats+", "addition": ["Case=Acc", "PronType=Prs"]}},
+    "S_PRP": {"pos": "PRON", "feats": {"method": "feats+", "addition": "PronType=Prs|Reflex=Yes"}},
+    "INTJ": {"pos": "INTJ", "feats": {"method": "_", "addition": ""}, "arc_label": "discourse"}
   },
   "basic_features": {
     "gen=F|gen=M": "Gender=Fem,Masc", "gen=F": "Gender=Fem", "gen=M": "Gender=Masc",
@@ -70,11 +70,17 @@
     "pobj": "obl",
     "prepmod": "case",
     "punct": "punct",
-    "xcomp": "xcomp"
+    "xcomp": "xcomp",
+    "gobj": "compound:smixut"
   },
   "labels_with_features_changed": {
-    "def": {"label": "det:def", "pos": "DET", "feats": {"old": "_", "new": "|PronType=Art"}},
-    "gen": {"label": "case:gen", "pos": "ADP", "feats": {"old": "_", "new": "Case=Gen"}}
+    "def": {"label": "det:def", "pos": "DET", "feats": {"method": "feats+", "addition": "PronType=Art"}},
+    "gen": {"label": "case:gen", "pos": "ADP", "feats": {"method": "_", "addition": "Case=Gen"}}
+  },
+  "determiner_types": {
+    "PronType=Dem": ["זה", "אלה", "אלו", "הללו", "זאת", "זו", "כך"],
+    "PronType=Ind": ["כלשהו", "מישהו", "איזה"],
+    "PronType=Prs": ["הוא", "אותו"]
   }
 }
 

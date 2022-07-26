@@ -24,6 +24,7 @@ import traceback
 import re
 from enums import *
 from hebtokenizer import HebTokenizer
+from spmrl_to_ud import convert_dep_tree_to_ud
 
 
 class YapApi(object):
@@ -70,6 +71,7 @@ class YapApi(object):
         for i, sntnce_or_paragraph in enumerate(text_arr):
             print('End Yap call {} /{}'.format(i, len(text_arr) - 1))
             _dep_tree, _md_lattice, _ma_lattice, _segmented_text, _lemmas = self.parse_sentence(sntnce_or_paragraph, ip)
+            _dep_tree = convert_dep_tree_to_ud(_dep_tree)
             self.append_paragraph_results(_dep_tree, _md_lattice, _ma_lattice, _segmented_text, _lemmas)
 
         return tokenized_text
@@ -333,8 +335,8 @@ if __name__ == '__main__':
     בתוך עיניה הכחולות ירח חם תלוי, עכשיו היא עצובה כמוני בוודאי היא מוציאה את בגדיי אוכלת לבדה ת'תות \
     היא לא יודעת, מה עובר עליי. \
     אמנם אין אהבה שאין לה סוף אבל הסוף הזה נראה לי מקולל הולך בין האנשים ברחוב צועק או או או או או או \
-    תגידו לה."   
-    
+    תגידו לה."
+    # text = "גנן גידל דגן בגן"
     # IP of YAP server, if locally installed then '127.0.0.1'
     ip = '127.0.0.1:8000'
     yap = YapApi()
