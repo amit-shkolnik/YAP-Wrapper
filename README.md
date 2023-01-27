@@ -7,7 +7,7 @@ https://aclweb.org/anthology/papers/Q/Q19/Q19-1003.bib
 Alternatively you may use the SaaS server (free use), https://www.langndata.com/heb_parser/overview that case you need only one line of code: https://www.langndata.com/api/heb_parser?token=[YOUR TOKEN HERE]&data="גנן גידל דגן בגן"
 
 # Windows installation
-If you have problem installing YAP on Windows, you may follow the instructions on ['Installing YAP on Windows']( https://drive.google.com/drive/folders/1NjZ6MHH6wsIobLYlgEpJBoBZ5sLcPoAq?usp=sharing ). This installation require only download the files from the link, extract them, and configure Windows' environment variables.
+If you have problem installing YAP on Windows, you may follow the instructions on ['Installing YAP on Windows']( https://1drv.ms/u/s!AsYCZBb59Y5NiPxs-OlFK4pWnB5daA?e=7D0hCJ ). This installation require only download the files from the link, extract them, and configure Windows' environment variables.
 
 
 How to use:
